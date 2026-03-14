@@ -6,19 +6,19 @@ export default function Testimonials() {
       text: "Switching to United Mississippi Bank was the best financial decision I've made. Their mobile app is incredibly intuitive, and the customer service is exceptional.",
       name: 'Sarah Johnson',
       role: 'Small Business Owner',
-      avatar: 'https://randomuser.me/api/portraits/women/45.jpg',
+      avatar: '/user1.jpg',
     },
     {
       text: 'The personal loan process was seamless. I got approval within hours and the funds were in my account the same day. Highly recommend their services.',
       name: 'Michael Chen',
       role: 'Software Engineer',
-      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+      avatar: '/user2.jpg',
     },
     {
       text: 'As a retiree, I appreciate the personalized service and financial planning assistance. The team always takes time to explain things clearly.',
       name: 'Robert Wilson',
       role: 'Retiree',
-      avatar: 'https://randomuser.me/api/portraits/men/67.jpg',
+      avatar: '/user3.jpg',
     },
   ];
 

@@ -13,7 +13,7 @@ export default function ProductShowcase() {
         'No prepayment penalties',
       ],
       cta: 'Apply Now',
-      image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1200&auto=format&fit=crop&q=80',
+      image: '/phone.avif',
     },
     {
       title: 'Business Banking Solutions',
@@ -25,7 +25,7 @@ export default function ProductShowcase() {
         'Dedicated support team',
       ],
       cta: 'Explore Business Banking',
-      image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=1200&auto=format&fit=crop&q=80',
+      image: '/workers.avif',
     },
     {
       title: 'Mobile & Online Banking',
@@ -37,7 +37,7 @@ export default function ProductShowcase() {
         'Real-time notifications',
       ],
       cta: 'Download App',
-      image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&auto=format&fit=crop&q=80',
+      image: '/banker.avif',
     },
   ];
 
