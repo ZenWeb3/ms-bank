@@ -10,7 +10,7 @@ export default function CTA() {
         <p className="text-lg md:text-xl text-gray-600 mb-12 leading-relaxed">
           Join thousands of satisfied customers who have already made the switch to United Mississippi Bank. Open your account in minutes.
         </p>
-        <Link href="#open-account" className="btn-primary-custom inline-block">
+        <Link href="/signup" className="btn-primary-custom inline-block">
           Open Account Today
         </Link>
       </div>

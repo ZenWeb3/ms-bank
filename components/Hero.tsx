@@ -1,36 +1,36 @@
 export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center pt-24 overflow-hidden">
-      <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 grid lg:grid-cols-2 gap-16 lg:gap-24 items-center relative z-10">
+      <div className="max-w-[1600px] mx-auto  sm:px-10 lg:px-16 grid lg:grid-cols-2 gap-16 lg:gap-24 items-center relative z-10">
 
         {/* LEFT CONTENT */}
-        <div className="hero-content animate-fadeInUp text-center lg:text-left">
+        <div className=" animate-fadeInUp text-center  lg:text-left">
 
           <div className="inline-flex items-center gap-2 px-5 py-2 bg-white/50 border border-[rgba(92,15,40,0.2)] rounded-full text-xs sm:text-sm font-medium text-gray-500 mb-6 shadow-sm">
             <span className="w-2 h-2 bg-red-600 rounded-full animate-pulse shadow-[0_0_12px_rgba(178,34,52,0.6)]" />
             Trusted by 500K+ customers
           </div>
 
-          <h1 className="font-syne font-extrabold leading-[1.1] tracking-tighter mb-6 text-[2.4rem] sm:text-[3.2rem] md:text-[4rem] lg:text-[5rem]">
+          <h1 className="font-syne font-extrabold leading-[1.1] tracking-tighter mb-6 text-[2.2rem] sm:text-[3rem] md:text-[4rem] lg:text-[5rem]">
             Banking <br />
-            <span className=" bg-linear-to-r from-[#5c0f28] via-[#b22234] via-[#3c3b6e] to-[#001a3d] bg-clip-text text-transparent bg-[length:200%_200%] animate-gradientShift">
+            <span className="bg-gradient-to-r from-[#5c0f28] via-[#b22234] via-[#3c3b6e] to-[#001a3d] bg-clip-text text-transparent bg-[length:200%_200%] animate-gradientShift">
               Reimagined
             </span>
           </h1>
 
-          <p className="text-base sm:text-lg md:text-xl text-gray-500 leading-relaxed max-w-[540px] mx-auto lg:mx-0 mb-10">
+          <p className="text-base  sm:text-lg md:text-xl text-gray-500 leading-relaxed max-w-[540px] mx-auto lg:mx-0 mb-10">
             Experience the future of financial services with United Mississippi
             Bank. Sophisticated banking solutions designed for modern life.
           </p>
 
           <div className="mb-12">
-            <button className="btn-primary-custom">
+            <button className="btn-primary-custom cursor-pointer">
               Open Account
             </button>
           </div>
 
           {/* STATS */}
-          <div className="flex flex-wrap justify-center lg:justify-start gap-8 sm:gap-12 pt-10 border-t border-gray-100">
+          <div className="flex flex-wrap justify-center  lg:justify-start gap-8 sm:gap-12 pt-10 border-t border-gray-100">
 
             <div>
               <div className="font-syne text-2xl sm:text-3xl md:text-4xl font-bold">
@@ -118,7 +118,7 @@ export default function Hero() {
           {/* FLOATING NOTIFICATIONS */}
 
           {/* Zelle */}
-          <div className="absolute notify z-30 bg-white/60 backdrop-blur-lg -left-4 sm:-left-10 top-6 sm:top-12 rounded-xl shadow-xl px-3 sm:px-4 py-2 sm:py-3 flex items-center gap-2 sm:gap-3 text-xs sm:text-sm animate-float">
+          <div className="absolute notify z-30 bg-white/60 backdrop-blur-lg left-4 sm:-left-10 top-6 sm:top-12 rounded-xl shadow-xl px-3 sm:px-4 py-2 sm:py-3 flex items-center gap-2 sm:gap-3 text-xs sm:text-sm animate-float">
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#7a1fd6] rounded-xl flex items-center justify-center text-white font-bold italic">
               Z
             </div>
@@ -134,7 +134,7 @@ export default function Hero() {
           </div>
 
           {/* Deposit */}
-          <div className="absolute notify z-30 bg-white/60 backdrop-blur-lg -right-6 sm:-right-12 bottom-20 sm:bottom-24 rounded-xl shadow-xl px-3 sm:px-4 py-2 sm:py-3 flex items-center gap-2 sm:gap-3 text-xs sm:text-sm animate-float">
+          <div className="absolute notify z-30 bg-white/60 backdrop-blur-lg right-4 sm:-right-12 bottom-20 sm:bottom-24 rounded-xl shadow-xl px-3 sm:px-4 py-2 sm:py-3 flex items-center gap-2 sm:gap-3 text-xs sm:text-sm animate-float">
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#00b09b] rounded-xl flex items-center justify-center text-white font-bold">
               $
             </div>
@@ -150,7 +150,7 @@ export default function Hero() {
           </div>
 
           {/* Wire */}
-          <div className="absolute notify z-30 bg-white/60 backdrop-blur-lg right-2 sm:right-14 -bottom-6 sm:-bottom-10 rounded-xl shadow-xl px-3 sm:px-4 py-2 sm:py-3 flex items-center gap-2 sm:gap-3 text-xs sm:text-sm animate-float">
+          <div className="absolute notify z-30 bg-white/60 backdrop-blur-lg right-8 sm:right-14 bottom-0 sm:-bottom-10 rounded-xl shadow-xl px-3 sm:px-4 py-2 sm:py-3 flex items-center gap-2 sm:gap-3 text-xs sm:text-sm animate-float">
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#3c3b6e] rounded-xl flex items-center justify-center text-white font-bold">
               W
             </div>
