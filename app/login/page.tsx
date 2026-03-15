@@ -127,7 +127,7 @@ export default function Login() {
         {/* Mobile Header */}
         <div className="lg:hidden p-4 flex items-center justify-between border-b border-white/5">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-linear-to-r from-[#5c0f28] via-[#b22234] via-[#3c3b6e] to-[#001a3d]   rounded-xl bg-[length:200%_200%] flex items-center justify-center text-white font-bold font-syne text-xl shadow-lg shadow-black/10">
+            <div className="w-10 h-10 bg-linear-to-r from-[#5c0f28] via-[#b22234] via-[#3c3b6e] to-[#001a3d]   rounded-xl bg-size-[200%_200%] flex items-center justify-center text-white font-bold font-syne text-xl shadow-lg shadow-black/10">
               U
             </div>
             <div>
