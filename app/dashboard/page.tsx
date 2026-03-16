@@ -88,7 +88,7 @@ export default function Dashboard() {
       .eq("user_id", user.id);
 
     // Fetch transactions
-    const accountIds = accounts?.map((a) => a.id) || [];
+    const accountIds = (accounts as Account[] | undefined)?.map((a) => a.id) || [];
     const { data: transactions } = await supabase
       .from("transactions")
       .select("*")
@@ -105,7 +105,7 @@ export default function Dashboard() {
 
       // Set default account for transfer
       if (accounts.length > 0) {
-        setTransferForm((prev) => ({ ...prev, accountId: accounts[0].id }));
+        setTransferForm((prev) => ({ ...prev, accountId: (accounts as Account[])[0].id }));
       }
     }
 
