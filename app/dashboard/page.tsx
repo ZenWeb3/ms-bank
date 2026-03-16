@@ -46,7 +46,7 @@ export default function Dashboard() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
-  const [showNetWorth, setShowNetWorth] = useState(true);
+  const [showBalances, setShowBalances] = useState(true);
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [selectedMethod, setSelectedMethod] = useState<
     "zelle" | "cashapp" | "wire" | null
@@ -60,8 +60,7 @@ export default function Dashboard() {
   });
   const [isProcessing, setIsProcessing] = useState(false);
   const [transferError, setTransferError] = useState("");
-  const [selectedTransaction, setSelectedTransaction] =
-    useState<Transaction | null>(null);
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -88,10 +87,8 @@ export default function Dashboard() {
       .select("*")
       .eq("user_id", user.id);
 
-    const typedAccounts: Account[] = accounts || [];
-
     // Fetch transactions
-    const accountIds = typedAccounts.map((a) => a.id);
+    const accountIds = accounts?.map((a) => a.id) || [];
     const { data: transactions } = await supabase
       .from("transactions")
       .select("*")
@@ -99,19 +96,16 @@ export default function Dashboard() {
       .order("created_at", { ascending: false })
       .limit(10);
 
-    if (profile && typedAccounts.length > 0) {
+    if (profile && accounts) {
       setUserData({
         profile,
-        accounts: typedAccounts,
+        accounts,
         transactions: transactions || [],
       });
 
       // Set default account for transfer
-      if (typedAccounts.length > 0) {
-        setTransferForm((prev) => ({
-          ...prev,
-          accountId: typedAccounts[0].id,
-        }));
+      if (accounts.length > 0) {
+        setTransferForm((prev) => ({ ...prev, accountId: accounts[0].id }));
       }
     }
 
@@ -165,7 +159,7 @@ export default function Dashboard() {
     }
 
     const selectedAccount = userData.accounts.find(
-      (a) => a.id === transferForm.accountId,
+      (a) => a.id === transferForm.accountId
     );
     if (!selectedAccount) {
       setTransferError("Please select an account");
@@ -181,17 +175,14 @@ export default function Dashboard() {
 
     // Call the process_transfer function
     // Using type assertion because Supabase's RPC typing requires exact schema match
-    const { data, error } = await (supabase.rpc as Function)(
-      "process_transfer",
-      {
-        p_account_id: transferForm.accountId,
-        p_amount: amount,
-        p_title: `${selectedMethod === "zelle" ? "Zelle" : selectedMethod === "cashapp" ? "Cash App" : "Wire"} to ${transferForm.recipient}`,
-        p_method: selectedMethod,
-        p_recipient: transferForm.recipient,
-        p_memo: transferForm.memo || null,
-      },
-    );
+    const { data, error } = await (supabase.rpc as Function)("process_transfer", {
+      p_account_id: transferForm.accountId,
+      p_amount: amount,
+      p_title: `${selectedMethod === "zelle" ? "Zelle" : selectedMethod === "cashapp" ? "Cash App" : "Wire"} to ${transferForm.recipient}`,
+      p_method: selectedMethod,
+      p_recipient: transferForm.recipient,
+      p_memo: transferForm.memo || null,
+    });
 
     if (error) {
       setTransferError((error as { message: string }).message);
@@ -235,20 +226,20 @@ export default function Dashboard() {
   }
 
   const savingsAccount = userData.accounts.find(
-    (a) => a.account_type === "savings",
+    (a) => a.account_type === "savings"
   );
   const checkingAccount = userData.accounts.find(
-    (a) => a.account_type === "checking",
+    (a) => a.account_type === "checking"
   );
   const netWorth = userData.accounts.reduce(
     (sum, acc) => sum + Number(acc.balance),
-    0,
+    0
   );
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white font-urbanist">
       {/* Header */}
-      <header className="border-b border-white/5  backdrop-blur-xl sticky top-0 z-50">
+      <header className="border-b border-white/5 bg-[#0a0a0a]/95 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
           {/* Logo - Only icon on mobile */}
           <Link href="/" className="flex items-center gap-3 z-[60]">
@@ -289,14 +280,12 @@ export default function Dashboard() {
             {/* Desktop: User info */}
             <div className="hidden md:flex items-center gap-3">
               <div className="text-right">
-                <div className="font-semibold text-sm text-white">
-                  {userData.profile.full_name}
-                </div>
+                <div className="font-semibold text-sm text-white">{userData.profile.full_name}</div>
                 <div className="text-[10px] text-amber-400 font-bold uppercase tracking-wider">
                   {userData.profile.tier}
                 </div>
               </div>
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#3c3b6e] to-[#b22234] flex items-center justify-center border-2 border-white/10">
+              <div className="w-10 h-10 rounded-full  flex items-center justify-center border-2 border-white/10">
                 <span className="text-sm font-bold font-syne text-white">
                   {userData.profile.full_name
                     .split(" ")
@@ -321,32 +310,22 @@ export default function Dashboard() {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle Menu"
             >
-              <span
-                className={`h-0.5 w-6 bg-white transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-2" : ""}`}
-              />
-              <span
-                className={`h-0.5 w-6 bg-white transition-all duration-300 ${isMobileMenuOpen ? "opacity-0" : ""}`}
-              />
-              <span
-                className={`h-0.5 w-6 bg-white transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
-              />
+              <span className={`h-0.5 w-6 bg-white transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-2" : ""}`} />
+              <span className={`h-0.5 w-6 bg-white transition-all duration-300 ${isMobileMenuOpen ? "opacity-0" : ""}`} />
+              <span className={`h-0.5 w-6 bg-white transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
             </button>
           </div>
         </div>
       </header>
 
       {/* Mobile Menu Dropdown */}
-      <div
-        className={`fixed inset-0 bg-[#0a0a0a]/98 backdrop-blur-xl z-40 xl:hidden transition-all duration-300 ${
-          isMobileMenuOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
-      >
+      <div className={`fixed inset-0 bg-[#0a0a0a]/98 backdrop-blur-xl z-40 xl:hidden transition-all duration-300 ${
+        isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+      }`}>
         <div className="flex flex-col pt-24 px-6 pb-8">
           {/* User info in mobile menu */}
           <div className="flex items-center gap-4 mb-8 pb-6 border-b border-white/10">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#3c3b6e] to-[#b22234] flex items-center justify-center border-2 border-white/10">
+            <div className="w-14 h-14 rounded-full flex items-center justify-center border-2 border-white/10">
               <span className="text-lg font-bold font-syne text-white">
                 {userData.profile.full_name
                   .split(" ")
@@ -355,9 +334,7 @@ export default function Dashboard() {
               </span>
             </div>
             <div>
-              <div className="font-semibold text-lg text-white">
-                {userData.profile.full_name}
-              </div>
+              <div className="font-semibold text-lg text-white">{userData.profile.full_name}</div>
               <div className="text-xs text-amber-400 font-bold uppercase tracking-wider">
                 {userData.profile.tier}
               </div>
@@ -412,21 +389,19 @@ export default function Dashboard() {
 
           {/* Net Worth */}
           <div className="bg-white/[0.02] rounded-2xl px-4 md:px-6 py-3 md:py-4 flex items-center gap-3 md:gap-5 border border-white/5 self-start">
-            <span className="text-gray-500 text-xs font-bold tracking-wider uppercase">
-              Net Worth
-            </span>
+            <span className="text-gray-500 text-xs font-bold tracking-wider uppercase">Net Worth</span>
             <button
-              onClick={() => setShowNetWorth(!showNetWorth)}
+              onClick={() => setShowBalances(!showBalances)}
               className="p-1.5 hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
             >
-              {showNetWorth ? (
+              {showBalances ? (
                 <EyeOff size={16} className="text-gray-500" />
               ) : (
                 <Eye size={16} className="text-gray-500" />
               )}
             </button>
             <span className="text-xl md:text-3xl font-bold font-syne tracking-tight text-white">
-              {showNetWorth ? formatCurrency(netWorth) : "••••••••"}
+              {showBalances ? formatCurrency(netWorth) : "••••••••"}
             </span>
           </div>
         </div>
@@ -448,7 +423,7 @@ export default function Dashboard() {
                 Current Balance
               </div>
               <div className="text-3xl md:text-4xl font-bold font-syne tracking-tight text-white">
-                {formatCurrency(Number(savingsAccount?.balance || 0))}
+                {showBalances ? formatCurrency(Number(savingsAccount?.balance || 0)) : "••••••••"}
               </div>
             </div>
             <div className="flex items-center justify-between pt-4 md:pt-5 border-t border-white/5">
@@ -479,7 +454,7 @@ export default function Dashboard() {
                 Current Balance
               </div>
               <div className="text-3xl md:text-4xl font-bold font-syne tracking-tight text-white">
-                {formatCurrency(Number(checkingAccount?.balance || 0))}
+                {showBalances ? formatCurrency(Number(checkingAccount?.balance || 0)) : "••••••••"}
               </div>
             </div>
             <div className="flex items-center justify-between pt-4 md:pt-5 border-t border-white/5">
@@ -501,9 +476,7 @@ export default function Dashboard() {
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#b22234]/10 to-[#3c3b6e]/10 flex items-center justify-center">
                 <Sparkles size={18} className="text-[#b22234]" />
               </div>
-              <span className="font-syne font-bold text-white">
-                Quick Actions
-              </span>
+              <span className="font-syne font-bold text-white">Quick Actions</span>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <button
@@ -555,15 +528,10 @@ export default function Dashboard() {
         {/* Recent Activity */}
         <div className="bg-white/[0.02] rounded-2xl border border-white/5 overflow-hidden">
           <div className="flex items-center justify-between p-6 border-b border-white/5">
-            <h2 className="text-xl font-syne font-bold text-white">
-              Recent Activity
-            </h2>
+            <h2 className="text-xl font-syne font-bold text-white">Recent Activity</h2>
             <button className="flex items-center gap-2 text-[#b22234] text-sm font-bold hover:text-[#b22234]/80 transition-colors cursor-pointer group">
               View All History
-              <ChevronRight
-                size={16}
-                className="group-hover:translate-x-0.5 transition-transform"
-              />
+              <ChevronRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
             </button>
           </div>
 
@@ -571,9 +539,7 @@ export default function Dashboard() {
             <div className="text-center py-16 text-gray-500">
               <FileText size={48} className="mx-auto mb-4 opacity-30" />
               <p className="font-medium">No transactions yet</p>
-              <p className="text-sm text-gray-600">
-                Your transactions will appear here
-              </p>
+              <p className="text-sm text-gray-600">Your transactions will appear here</p>
             </div>
           ) : (
             <div className="divide-y divide-white/5">
@@ -583,7 +549,7 @@ export default function Dashboard() {
                   onClick={() => setSelectedTransaction(tx)}
                   className="w-full flex items-center justify-between gap-3 px-4 md:px-6 py-4 md:py-5 hover:bg-white/[0.02] transition-colors cursor-pointer text-left"
                 >
-                  {/* Left side - Icon + Title/Date/Badges */}
+                  {/* Left side - Icon + Title/Date */}
                   <div className="flex items-center gap-3 md:gap-4 min-w-0 flex-1">
                     <div
                       className={`w-10 md:w-11 h-10 md:h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${
@@ -598,21 +564,42 @@ export default function Dashboard() {
                         <ArrowUpRight size={18} className="text-red-400" />
                       )}
                     </div>
-                    <div className="min-w-0">
-                      <div className="font-semibold text-white truncate text-sm md:text-base">
-                        {tx.title}
-                      </div>
-                      {/* Badges + Date row */}
-                      <div className="flex items-center gap-2 mt-1">
-                        {tx.status === "pending" && (
-                          <span className="px-1.5 md:px-2 py-0.5 bg-amber-500/10 text-amber-400 text-[8px] md:text-[9px] font-bold rounded-full uppercase tracking-wide">
-                            Pending
-                          </span>
-                        )}
-                        <span className="px-1.5 md:px-2 py-0.5 bg-white/5 text-gray-500 text-[8px] md:text-[9px] font-bold rounded-full uppercase tracking-wide">
-                          {tx.method || "transfer"}
+                    <div className="min-w-0 flex-1">
+                      {/* Title row with badges on desktop */}
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-white truncate text-sm md:text-base">
+                          {tx.title}
                         </span>
-                        <span className="text-xs md:text-sm text-gray-600">
+                        {/* Badges - desktop only */}
+                        <div className="hidden md:flex items-center gap-1.5 flex-shrink-0">
+                          <span className={`px-2 py-0.5 text-[9px] font-bold rounded-full uppercase tracking-wide ${
+                            tx.status === "completed" 
+                              ? "bg-emerald-500/20 text-emerald-400" 
+                              : "bg-amber-500/20 text-amber-400"
+                          }`}>
+                            {tx.status}
+                          </span>
+                          <span className="px-2 py-0.5 bg-white/10 text-gray-300 text-[9px] font-bold rounded-full uppercase tracking-wide">
+                            {tx.method || "transfer"}
+                          </span>
+                        </div>
+                      </div>
+                      {/* Date row */}
+                      <div className="flex items-center gap-2 mt-0.5">
+                        {/* Badges - mobile only */}
+                        <div className="flex md:hidden items-center gap-1.5">
+                          <span className={`px-1.5 py-0.5 text-[8px] font-bold rounded-full uppercase ${
+                            tx.status === "completed" 
+                              ? "bg-emerald-500/20 text-emerald-400" 
+                              : "bg-amber-500/20 text-amber-400"
+                          }`}>
+                            {tx.status}
+                          </span>
+                          <span className="px-1.5 py-0.5 bg-white/10 text-gray-300 text-[8px] font-bold rounded-full uppercase">
+                            {tx.method || "transfer"}
+                          </span>
+                        </div>
+                        <span className="text-xs text-gray-500">
                           {formatDate(tx.created_at)}
                         </span>
                       </div>
@@ -631,10 +618,7 @@ export default function Dashboard() {
                       {tx.transaction_type === "incoming" ? "+" : "-"}
                       {formatCurrency(Number(tx.amount))}
                     </div>
-                    <ChevronRight
-                      size={16}
-                      className="text-gray-600 hidden md:block"
-                    />
+                    <ChevronRight size={16} className="text-gray-600 hidden md:block" />
                   </div>
                 </button>
               ))}
@@ -899,19 +883,17 @@ export default function Dashboard() {
 
       {/* Transaction Detail Modal */}
       {selectedTransaction && (
-        <div
+        <div 
           className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedTransaction(null)}
         >
-          <div
+          <div 
             className="bg-[#0a0a0a] rounded-3xl border border-white/10 w-full max-w-md overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-white/5">
-              <h3 className="text-xl font-syne font-bold">
-                Transaction Details
-              </h3>
+              <h3 className="text-xl font-syne font-bold">Transaction Details</h3>
               <button
                 onClick={() => setSelectedTransaction(null)}
                 className="p-2 hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
@@ -944,14 +926,10 @@ export default function Dashboard() {
                       : "text-red-400"
                   }`}
                 >
-                  {selectedTransaction.transaction_type === "incoming"
-                    ? "+"
-                    : "-"}
+                  {selectedTransaction.transaction_type === "incoming" ? "+" : "-"}
                   {formatCurrency(Number(selectedTransaction.amount))}
                 </div>
-                <div className="text-gray-500 font-medium">
-                  {selectedTransaction.title}
-                </div>
+                <div className="text-gray-500 font-medium">{selectedTransaction.title}</div>
               </div>
 
               {/* Details Grid */}
@@ -959,13 +937,11 @@ export default function Dashboard() {
                 {/* Status */}
                 <div className="flex items-center justify-between py-3 border-b border-white/5">
                   <span className="text-gray-500 text-sm">Status</span>
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${
-                      selectedTransaction.status === "completed"
-                        ? "bg-emerald-500/10 text-emerald-400"
-                        : "bg-amber-500/10 text-amber-400"
-                    }`}
-                  >
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${
+                    selectedTransaction.status === "completed"
+                      ? "bg-emerald-500/10 text-emerald-400"
+                      : "bg-amber-500/10 text-amber-400"
+                  }`}>
                     {selectedTransaction.status}
                   </span>
                 </div>
@@ -974,9 +950,7 @@ export default function Dashboard() {
                 <div className="flex items-center justify-between py-3 border-b border-white/5">
                   <span className="text-gray-500 text-sm">Method</span>
                   <span className="text-white font-medium capitalize">
-                    {selectedTransaction.method === "cashapp"
-                      ? "Cash App"
-                      : selectedTransaction.method || "Transfer"}
+                    {selectedTransaction.method === "cashapp" ? "Cash App" : selectedTransaction.method || "Transfer"}
                   </span>
                 </div>
 
@@ -984,17 +958,14 @@ export default function Dashboard() {
                 <div className="flex items-center justify-between py-3 border-b border-white/5">
                   <span className="text-gray-500 text-sm">Date & Time</span>
                   <span className="text-white font-medium">
-                    {new Date(selectedTransaction.created_at).toLocaleString(
-                      "en-US",
-                      {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                        hour: "numeric",
-                        minute: "2-digit",
-                        hour12: true,
-                      },
-                    )}
+                    {new Date(selectedTransaction.created_at).toLocaleString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                      hour12: true,
+                    })}
                   </span>
                 </div>
 
@@ -1002,9 +973,7 @@ export default function Dashboard() {
                 <div className="flex items-center justify-between py-3 border-b border-white/5">
                   <span className="text-gray-500 text-sm">Type</span>
                   <span className="text-white font-medium capitalize">
-                    {selectedTransaction.transaction_type === "incoming"
-                      ? "Money Received"
-                      : "Money Sent"}
+                    {selectedTransaction.transaction_type === "incoming" ? "Money Received" : "Money Sent"}
                   </span>
                 </div>
 
@@ -1012,9 +981,7 @@ export default function Dashboard() {
                 {selectedTransaction.recipient && (
                   <div className="flex items-center justify-between py-3 border-b border-white/5">
                     <span className="text-gray-500 text-sm">Recipient</span>
-                    <span className="text-white font-medium">
-                      {selectedTransaction.recipient}
-                    </span>
+                    <span className="text-white font-medium">{selectedTransaction.recipient}</span>
                   </div>
                 )}
 
@@ -1022,9 +989,7 @@ export default function Dashboard() {
                 {selectedTransaction.memo && (
                   <div className="flex items-center justify-between py-3 border-b border-white/5">
                     <span className="text-gray-500 text-sm">Memo</span>
-                    <span className="text-white font-medium">
-                      {selectedTransaction.memo}
-                    </span>
+                    <span className="text-white font-medium">{selectedTransaction.memo}</span>
                   </div>
                 )}
 
@@ -1032,8 +997,7 @@ export default function Dashboard() {
                 <div className="flex items-center justify-between py-3">
                   <span className="text-gray-500 text-sm">Transaction ID</span>
                   <span className="text-gray-400 font-mono text-xs">
-                    {selectedTransaction.id.slice(0, 8)}...
-                    {selectedTransaction.id.slice(-4)}
+                    {selectedTransaction.id.slice(0, 8)}...{selectedTransaction.id.slice(-4)}
                   </span>
                 </div>
               </div>
